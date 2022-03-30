@@ -38,7 +38,7 @@ class Instance(core.NestedStack):
             image_id="ami-0c02fb55956c7d316",
             instance_type="t2.micro",
             key_name="OsamaKP",
-            security_group_ids=["sg-00463a7141fafa949-fdsfds"],
+            security_group_ids=["sg-00463a7141fafa949"],
             subnet_id="subnet-0c5eb1c31ae288a15" ,
             iam_instance_profile="ssh_tunnel_instance_profile",
             user_data=core.Fn.base64(user_data)
