@@ -1,28 +1,19 @@
 #!/usr/bin/env python3
 import os
 
-import aws_cdk as cdk
+from aws_cdk import core
+from testing_cdk.vpc import VPC as crossVPC
+from testing_cdk.instance import Instance as crossInstance
+from testing_cdk.vpc_nestedstack import VPC as nestedVPC
+from testing_cdk.ec2_nestedstack import Instance as nestedInstance
 
-from testing_cdk.testing_cdk_stack import TestingCdkStack
+app = core.App()
+stack_vpc=crossVPC(app, "sharjeelVPCStackDev")
+crossInstance(app, "sharjeelinstanceDev",vpc=stack_vpc.vpc)
 
-
-app = cdk.App()
-TestingCdkStack(app, "TestingCdkStack",
-    # If you don't specify 'env', this stack will be environment-agnostic.
-    # Account/Region-dependent features and context lookups will not work,
-    # but a single synthesized template can be deployed anywhere.
-
-    # Uncomment the next line to specialize this stack for the AWS Account
-    # and Region that are implied by the current CLI configuration.
-
-    #env=cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'), region=os.getenv('CDK_DEFAULT_REGION')),
-
-    # Uncomment the next line if you know exactly what Account and Region you
-    # want to deploy the stack to. */
-
-    #env=cdk.Environment(account='123456789012', region='us-east-1'),
-
-    # For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html
-    )
+#calling nested stack
+main_stack = core.Stack(app, 'NestedStack', env={'region': 'us-east-1'})
+nested_stack_vpc = nestedVPC(main_stack, "nestedstackVPCdev")
+nestedInstance(main_stack, "nestedstackInstacncedev", vpc=nested_stack_vpc.vpc)
 
 app.synth()
